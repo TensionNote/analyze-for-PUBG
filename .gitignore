@@ -1,0 +1,8 @@
+# secretディレクトリは除外
+secret/
+
+# output_filesディレクトリは除外
+output_files/
+
+#テキストファイルは除外
+*.txt
