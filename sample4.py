@@ -1,4 +1,4 @@
-import modules.api as api_key
+import secret.api as api_key
 from pubg_python import PUBG, Shard
 api = PUBG(api_key.api_key(), Shard.PC_AS)
 

@@ -1,8 +1,7 @@
-# secretディレクトリは除外
+# 下記ディレクトリは除外
 secret/
-
-# output_filesディレクトリは除外
 output_files/
+json/
 
 #テキストファイルは除外
 *.txt
