@@ -1,4 +1,4 @@
-import modules.api as api_key
+import secret.api as api_key
 import pprint
 from pubg_python import PUBG, Shard
 import json
@@ -13,9 +13,16 @@ asset = match.assets[0]
 # json.dump(telemetry, telemetry.events, indent=2)
 # pprint.pprint(telemetry.events)
 
+
+# 以下、pythonオブジェクトをjson形式に保存
+r=json.dumps(match.attributes,indent=3)
+with open('match.json', mode='w') as f:
+    f.write(r)
+
+# 以下、requestsによってダウンロード、json形式に変化して書き込み
 try:
     r = requests.get(asset.url)
-    with open('test.json', mode='w') as f:
+    with open('telemetry.json', mode='w') as f:
         json.dump(r.json(),f, indent=3)
 except requests.exceptions.RequestException as err:
     print(err)

@@ -1,4 +1,4 @@
-import modules.api as api
+import secret.api as api
 from chicken_dinner.pubgapi import PUBG
 
 api_key=api.api_key()
