@@ -5,8 +5,9 @@ import requests
 import pprint
 import modules.CharacterPosition as CP
 import csv
+import modules.func4map as func4map
 
-match_id="2fe06742-cf8a-41b6-8c82-db66af70bfd8"
+match_id="a42d3300-d3d5-46b5-b460-125cc013f75c"
 shard="steam"
 
 pubg = PUBG(api_key.api_key(), shard)
@@ -26,15 +27,16 @@ telemetry = pubg.telemetry(match.telemetry_url)
 # except requests.exceptions.RequestException as err:
 #     print(err)
 
-# key確認用
-# pprint.pprint(telemetry.event_types())
-
 # フィルタ(chiken dinner)
 player_position_events=telemetry.filter_by("log_parachute_landing")
-# pprint.pprint(player_position_events[0])
 landing_point_list=[]
 for event in player_position_events:
     landing_point_list.append([event.character.location.x, event.character.location.y, event.character.location.z, event.character.name])
-with open('./output_files/landing_point.csv', 'w') as file:
-    writer = csv.writer(file, lineterminator='\n')
-    writer.writerows(landing_point_list)
+# with open('./output_files/landing_point.csv', 'w') as file:
+#     writer = csv.writer(file, lineterminator='\n')
+#     writer.writerows(landing_point_list)
+
+map_img = func4map.load_map(match.map_name)
+map_img = func4map.draw_landing_point(map_img, landing_point_list)
+map_img = func4map.resize_map(map_img)
+print("hoge")
