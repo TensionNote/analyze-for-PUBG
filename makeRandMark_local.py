@@ -6,9 +6,6 @@ import pprint
 import modules.CharacterPosition as CP
 import csv
 
-# json_open = open('./json/2fe06742-cf8a-41b6-8c82-db66af70bfd8_telemetry.json', 'r')
-# telemetry = json.load(json_open)
-
 from pubg_python import Telemetry as loding_local_telemetry
 
 telemetry = loding_local_telemetry.from_json('./json/2fe06742-cf8a-41b6-8c82-db66af70bfd8_telemetry.json', shard='pc')
