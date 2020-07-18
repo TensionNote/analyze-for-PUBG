@@ -3,7 +3,6 @@ from chicken_dinner.pubgapi import PUBG
 import json
 import requests
 import pprint
-import modules.CharacterPosition as CP
 import csv
 import modules.func4map as func4map
 
@@ -31,7 +30,15 @@ telemetry = pubg.telemetry(match.telemetry_url)
 player_position_events=telemetry.filter_by("log_parachute_landing")
 landing_point_list=[]
 for event in player_position_events:
-    landing_point_list.append([event.character.location.x, event.character.location.y, event.character.location.z, event.character.name])
+    landing_point_list.append(
+        [
+            event.character.location.x,
+            event.character.location.y,
+            event.character.location.z,
+            event.character.name,
+            event.character.team_id
+        ]
+    )
 # with open('./output_files/landing_point.csv', 'w') as file:
 #     writer = csv.writer(file, lineterminator='\n')
 #     writer.writerows(landing_point_list)
