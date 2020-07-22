@@ -3,7 +3,7 @@ def load_map(map_name):
     # Baltic_Main, Desert_Main, DihorOtok_Main, Erangel_Main, Range_Main, Savage_Main, Summerland_Main 
     path_map={
         "Desert_Main":"./map/Miramar_Main_High_Res.png",
-        "Erangel_Main":"./map/Erangel_Remastered_Main_High_Res.png"
+        "Baltic_Main":"./map/Erangel_Remastered_Main_High_Res.png"
     }
     img = Image.open(path_map[map_name])
     img = img.convert("RGB")
