@@ -2,6 +2,7 @@
 secret/
 output_files/
 json/
+upload2lambda/
 
 #テキストファイルは除外
 *.txt

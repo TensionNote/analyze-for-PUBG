@@ -50,7 +50,7 @@ def extract_circle_position(telemetry):
     #     writer.writerows(game_state_list)
     return game_state_list
 
-def extract_circle_aircraft_path(telemetry):
+def extract_aircraft_path(telemetry):
     aircraft_path_list=[]
     for event in telemetry.events_from_type("LogPlayerPosition"):
         try:
@@ -66,7 +66,7 @@ def extract_circle_aircraft_path(telemetry):
                 )
         except TypeError:
             pass
-    # # CSV出力（テスト用）
+    # CSV出力（テスト用）
     # with open('./output_files/aircraft_path_list.csv', 'w') as file:
     #     writer = csv.writer(file, lineterminator='\n')
     #     writer.writerows(aircraft_path_list)
