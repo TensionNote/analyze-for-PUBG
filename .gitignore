@@ -3,6 +3,9 @@ secret/
 output_files/
 json/
 upload2lambda/
+modules4lambda
 
 #テキストファイルは除外
 *.txt
+*.bat
+*.zip
