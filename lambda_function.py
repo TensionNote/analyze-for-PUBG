@@ -22,3 +22,16 @@ def lambda_handler(event, context):
     bucket = "make-landing-point"
     key = "LandingPoint_"+match_time_str+"_"+match.map_name+".png"
     s3_client.upload_file(newfilepath, bucket, key)
+
+    # return download link
+    s3.get_object(Bucket=bucket, Key=key)
+    url = s3.generate_presigned_url(
+        ClientMethod = 'get_object',
+        Params = {
+            'Bucket' : bucket,
+            'Key' : key
+        },
+        ExpiresIn = 3600,
+        HttpMethod = 'GET'
+    )
+    return url
