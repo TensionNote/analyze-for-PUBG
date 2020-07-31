@@ -12,7 +12,7 @@ import boto3
 s3_client = boto3.client('s3')
 
 def lambda_handler(event, context):
-    match_id=event['match_id']
+    match_id=event['match']
 
     [map_img, match_time_str, match]=makeLandingPoint.makeLandigPoint(match_id)
 
@@ -24,8 +24,8 @@ def lambda_handler(event, context):
     s3_client.upload_file(newfilepath, bucket, key)
 
     # return download link
-    s3.get_object(Bucket=bucket, Key=key)
-    url = s3.generate_presigned_url(
+    s3_client.get_object(Bucket=bucket, Key=key)
+    url = s3_client.generate_presigned_url(
         ClientMethod = 'get_object',
         Params = {
             'Bucket' : bucket,
@@ -34,4 +34,7 @@ def lambda_handler(event, context):
         ExpiresIn = 3600,
         HttpMethod = 'GET'
     )
-    return url
+    return {
+    'statusCode': 200,
+    'body': url
+    }
