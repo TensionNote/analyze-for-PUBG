@@ -20,7 +20,7 @@ def lambda_handler(event, context):
     map_img.save(newfilepath)
 
     bucket = "make-landing-point"
-    key = "LandingPoint_"+match_time_str+"_"+match.map_name+".png"
+    key = "output_files/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
     s3_client.upload_file(newfilepath, bucket, key)
 
     # return download link
