@@ -7,9 +7,10 @@ from datetime import datetime,timedelta
 from pubg_python import PUBG, Shard
 
 # function
-def makeLandigPoint(match_id):
-    # get data from Server
-    [match,telemetry]=func4start.get_data_from_server(api_key.api_key(),match_id)
+def makeLandigPoint(match_id,region):
+    ## get data from Server
+    # region is "AS" or "TOURNAMENT"
+    [match,telemetry]=func4start.get_data_from_server(api_key.api_key(),match_id,region)
 
     # get match time
     match_time = datetime.strptime(match.attributes['createdAt'], '%Y-%m-%dT%H:%M:%SZ')
@@ -32,16 +33,3 @@ def save_files(match):
 
 def save_img(map_img, match_time_str, match_map_name):
     map_img.save("./output_files/LandingPoint_"+match_time_str+"_"+match_map_name+".png")
-
-
-# main
-# match_id_list=[
-#     "58ed175c-cba9-4594-9587-65f8ea243909",
-#     "b8327145-4c65-4311-82b0-c46a28970caa",
-#     "e243bbc0-cf76-45c0-8942-5349bfbf10ad",
-#     "803f9953-6e07-4e1d-aef2-eb4cee7d0443",
-#     "ad263525-c95b-436d-8a67-e9265392de95"
-# ]
-# for match_id in match_id_list:
-#     [map_img, match_time_str, match]=makeLandigPoint(match_id)
-#     save_img(map_img, match_time_str, match.map_name)
