@@ -71,3 +71,29 @@ def extract_aircraft_path(telemetry):
     #     writer = csv.writer(file, lineterminator='\n')
     #     writer.writerows(aircraft_path_list)
     return aircraft_path_list
+
+def extract_routing_path(telemetry):
+    routing_path_list=[]
+    for event in telemetry.events_from_type('LogPlayerPosition'):
+        routing_path_list.append(
+            [
+                event.character.location.x,
+                event.character.location.y,
+                event.character.location.z,
+                event.character.name,
+                event.character.team_id,
+                event.timestamp
+            ]
+        )
+    # CSV出力（テスト用）
+    # with open('./output_files/routing_path.csv', 'w') as file:
+    #     writer = csv.writer(file, lineterminator='\n')
+    #     writer.writerows(routing_path_list)
+    return routing_path_list
+
+def extract_roster(match):
+    roster_list=[]
+    for i in match.rosters:
+        for j in i.participants:
+            roster_list.append([i.attributes['stats']['teamId'], j.name])
+    return roster_list
