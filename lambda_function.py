@@ -13,8 +13,9 @@ s3_client = boto3.client('s3')
 
 def lambda_handler(event, context):
     match_id=event['match']
+    region=event['region']
 
-    [map_img, match_time_str, match]=makeLandingPoint.makeLandigPoint(match_id)
+    [map_img, match_time_str, match]=makeLandingPoint.makeLandigPoint(match_id,region)
 
     newfilepath="/tmp/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
     map_img.save(newfilepath)

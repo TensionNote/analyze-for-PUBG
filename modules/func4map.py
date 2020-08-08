@@ -85,3 +85,17 @@ def draw_aircraft_path(map_img, aircraft_path_list):
             last_point[1]*0.01-Ux*200-Uy*500
         ), fill="white", width=20)
     return map_img
+
+
+def draw_routing_path(map_img, routing_path_list, roster_list, team_id):
+    draw = ImageDraw.Draw(map_img)
+    # Filter for one team(player name)
+    team_roster_list=list(filter(lambda x: x[0]==team_id, roster_list))
+
+    # Filter for one team(routing path)
+    team_routing_path_list=list(filter(lambda x: x[4]==team_id, routing_path_list))
+
+    for i in team_roster_list:
+        player_routing_path_list=list(filter(lambda x: x[4]==i[1], team_routing_path_list))
+        for j in player_routing_path_list:
+            
