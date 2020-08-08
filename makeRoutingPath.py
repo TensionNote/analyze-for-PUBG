@@ -21,12 +21,11 @@ def makeRoutingPath(match_id,region):
     map_img = func4map.load_map(match.map_name)
     # get roster
     roster_list=func4extract.extract_roster(match)
-    # draw Landing Points
+    # get lanfing point
+    landing_point_list=func4extract.extract_landing_point(telemetry)
+    # draw Routing Path
     routing_path_list=func4extract.extract_routing_path(telemetry)
-    # map_img = func4map.draw_routing_path(map_img, routing_path_list)
-
-
-
+    map_img = func4map.draw_routing_path(map_img, routing_path_list, landing_point_list, roster_list, 1)
     # # draw aircraft path
     # aircraft_path_list=func4extract.extract_aircraft_path(telemetry)
     # map_img = func4map.draw_aircraft_path(map_img, aircraft_path_list)
@@ -40,6 +39,7 @@ def save_img(map_img, match_time_str, match_map_name):
     map_img.save("./output_files/RoutingPath_"+match_time_str+"_"+match_map_name+".png")
 
 
-match_id="54b4e7d1-8017-4b98-896d-3ce588da8622"
-region="as"
-makeRoutingPath(match_id,region)
+match_id="9bf45f55-3f30-4e36-96a5-d1f850e89955"
+region="tournament"
+[map_img, match_time_str, match]=makeRoutingPath(match_id,region)
+save_img(map_img, match_time_str, match.map_name)
