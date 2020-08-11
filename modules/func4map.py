@@ -123,5 +123,22 @@ def draw_routing_path(map_img, routing_path_list, landing_point_list, roster_lis
         draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
         font = ImageFont.truetype("./font/Myriad Pro Bold SemiExtended.ttf", 40)
         draw.text((x+40,y-40), i['name'], fill="black",font=font)
+    return map_img
 
+def draw_circle_position(map_img, game_state_list):
+    circle_phase1=list(filter(lambda x: x['isGame']==1, game_state_list))
+    circle_phase2=list(filter(lambda x: x['isGame']==2, game_state_list))
+    draw = ImageDraw.Draw(map_img)
+    draw.arc((
+        circle_phase1[0]['poisonGasWarningPosition_x']*0.01-circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
+        circle_phase1[0]['poisonGasWarningPosition_y']*0.01-circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
+        circle_phase1[0]['poisonGasWarningPosition_x']*0.01+circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
+        circle_phase1[0]['poisonGasWarningPosition_y']*0.01+circle_phase1[0]['poisonGasWarningPosition_radius']*0.01
+        ), start=0, end=360, fill="White",width=20)
+    draw.arc((
+        circle_phase2[0]['poisonGasWarningPosition_x']*0.01-circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
+        circle_phase2[0]['poisonGasWarningPosition_y']*0.01-circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
+        circle_phase2[0]['poisonGasWarningPosition_x']*0.01+circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
+        circle_phase2[0]['poisonGasWarningPosition_y']*0.01+circle_phase2[0]['poisonGasWarningPosition_radius']*0.01
+        ), start=0, end=360, fill="White",width=20)
     return map_img

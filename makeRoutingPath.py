@@ -29,6 +29,8 @@ def makeRoutingPath(match_id,region):
     # # draw aircraft path
     # aircraft_path_list=func4extract.extract_aircraft_path(telemetry)
     # map_img = func4map.draw_aircraft_path(map_img, aircraft_path_list)
+    game_state_list=func4extract.extract_circle_position(telemetry)
+    map_img = func4map.draw_circle_position(map_img, game_state_list)
     map_img = func4map.resize_map(map_img)
     return [map_img, match_time_str, match]
 

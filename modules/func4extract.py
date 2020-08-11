@@ -20,30 +20,20 @@ def extract_landing_point(telemetry):
 
 def extract_circle_position(telemetry):
     # poisonGasWarningPosition ⇒発表される安全地帯、is_Gameが整数の時に切り替わる
-    # safetyZonePosition ⇒刻一刻と変わる安全地帯is_Gameが少数の時に現象し続ける
+    # safetyZonePosition ⇒刻一刻と変わる安全地帯is_Gameが少数の時に減少し続ける
     game_state_list=[]
-    game_state_list.append(
-        [
-            "safetyZonePosition_x",
-            "safetyZonePosition_y",
-            "safetyZonePosition_radius",
-            "poisonGasWarningPosition_x",
-            "poisonGasWarningPosition_y",
-            "poisonGasWarningPosition_radius",
-            "isGame"
-        ]
-    )
     for event in telemetry.events_from_type("LogGameStatePeriodic"):
         game_state_list.append(
-            [
-                event.game_state.safety_zone_position.store['x'],
-                event.game_state.safety_zone_position.store['y'],
-                event.game_state.safety_zone_radius,
-                event.game_state.poison_gas_warning_position.store['x'],
-                event.game_state.poison_gas_warning_position.store['x'],
-                event.game_state.poison_gas_warning_radius,
-                event.common.is_game
-            ]
+            {
+                'safetyZonePosition_x': event.game_state.safety_zone_position.store['x'],
+                'safetyZonePosition_y': event.game_state.safety_zone_position.store['y'],
+                'safetyZonePosition_radius': event.game_state.safety_zone_radius,
+                'poisonGasWarningPosition_x': event.game_state.poison_gas_warning_position.store['x'],
+                'poisonGasWarningPosition_y': event.game_state.poison_gas_warning_position.store['x'],
+                'poisonGasWarningPosition_radius': event.game_state.poison_gas_warning_radius,
+                'isGame': event.common.is_game,
+                'timestamp': event.timestamp
+            }
         )
     # CSV出力（テスト用）
     # with open('./output_files/game_state_list.csv', 'w') as file:
