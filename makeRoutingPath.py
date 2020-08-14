@@ -21,18 +21,24 @@ def makeRoutingPath(match_id,region):
     map_img = func4map.load_map(match.map_name)
     # get roster
     roster_list=func4extract.extract_roster(match)
-    # get lanfing point
-    landing_point_list=func4extract.extract_landing_point(telemetry)
-    # draw Routing Path
-    routing_path_list=func4extract.extract_routing_path(telemetry)
-    map_img = func4map.draw_routing_path(map_img, routing_path_list, landing_point_list, roster_list, 1)
-    # # draw aircraft path
-    # aircraft_path_list=func4extract.extract_aircraft_path(telemetry)
-    # map_img = func4map.draw_aircraft_path(map_img, aircraft_path_list)
+
+    # draw aircraft path
+    aircraft_path_list=func4extract.extract_aircraft_path(telemetry)
+    map_img = func4map.draw_aircraft_path(map_img, aircraft_path_list)
+
+    # draw circle position
     game_state_list=func4extract.extract_circle_position(telemetry)
     map_img = func4map.draw_circle_position(map_img, game_state_list)
+
+    # get lanfing point
+    landing_point_list=func4extract.extract_landing_point(telemetry)
+
+    # draw Routing Path
+    routing_path_list=func4extract.extract_routing_path(telemetry)
+    map_img_list = func4map.draw_routing_path(map_img, routing_path_list, landing_point_list, roster_list, game_state_list)
+
     map_img = func4map.resize_map(map_img)
-    return [map_img, match_time_str, match]
+    return [map_img, match_time_str, match,]
 
 def save_files(match):
     func4savefiles.save_files(match)

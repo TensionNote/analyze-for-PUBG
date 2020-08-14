@@ -87,43 +87,65 @@ def draw_aircraft_path(map_img, aircraft_path_list):
     return map_img
 
 
-def draw_routing_path(map_img, routing_path_list, landing_point_list, roster_list, team_id):
+def draw_routing_path(map_img, routing_path_list, landing_point_list, roster_list, game_state_list):
     color_map={
         "0":"maroon",
         "1":"fuchsia",
         "2":"Lime",
         "3":"Blue"
     }
-    draw = ImageDraw.Draw(map_img)
-    # Filter for one team(player name)
-    team_roster_list=list(filter(lambda x: x['team_id']==team_id, roster_list))
+    map_img_list=[]
+    for team_num,team_roster_list in enumerate(roster_list):
+        # loading map
+        map_img_list.append(map_img)
+        draw = ImageDraw.Draw(map_img_list[team_num])
 
-    # Filter for one team(routing path)
-    team_routing_path_list=list(filter(lambda x: x['team_id']==team_id, routing_path_list))
+        # Filter for one team(routing path)
+        team_routing_path_list=list(filter(lambda x: x['team_id']==team_roster_list[0]['team_id'], routing_path_list))
 
-    for num,i in enumerate(team_roster_list):
-        player_landing_point=list(filter(lambda x: x['name']==i['name'], landing_point_list))
-        player_landig_timestamp=datetime.strptime(player_landing_point[0]['timestamp'],'%Y-%m-%dT%H:%M:%S.%fZ')
-        player_routing_path_list=list(filter(lambda x: x['name']==i['name'], team_routing_path_list))
-        path_list=[]
-        path_bool=False
-        # Landing Point to Dead Point
-        path_list.append(player_landing_point[0]['x']*0.01)
-        path_list.append(player_landing_point[0]['y']*0.01)
-        for j in player_routing_path_list:
-            if player_landig_timestamp<=datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
-                path_bool=True
-            if path_bool:
-                path_list.append(j['x']*0.01)
-                path_list.append(j['y']*0.01)
-        draw.line(path_list,fill=color_map[str(num)],width=10)
-        # Draw player name nearby Dead Point
-        x=player_landing_point[0]['x']*0.01
-        y=player_landing_point[0]['y']*0.01
-        draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
-        font = ImageFont.truetype("./font/Myriad Pro Bold SemiExtended.ttf", 40)
-        draw.text((x+40,y-40), i['name'], fill="black",font=font)
-    return map_img
+        for num,i in enumerate(team_roster_list):
+            player_landing_point=list(filter(lambda x: x['name']==i['name'], landing_point_list))
+            player_landig_timestamp=datetime.strptime(player_landing_point[0]['timestamp'],'%Y-%m-%dT%H:%M:%S.%fZ')
+            player_routing_path_list=list(filter(lambda x: x['name']==i['name'], team_routing_path_list))
+            path_list=[]
+            path_bool=False
+            circle_phase1_end=list(filter(lambda x: x['isGame']==1.5, game_state_list))
+            circle_phase1_bool=True
+            circle_phase2_end=list(filter(lambda x: x['isGame']==2.5, game_state_list))
+            # Landing Point to Phase2
+            path_list.append(player_landing_point[0]['x']*0.01)
+            path_list.append(player_landing_point[0]['y']*0.01)
+            for j in player_routing_path_list:
+                if circle_phase1_bool and datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')>=datetime.strptime(circle_phase1_end[len(circle_phase1_end)-1]['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
+                    phase1_end_position=j
+                    circle_phase1_bool=False
+                if datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')>=datetime.strptime(circle_phase2_end[len(circle_phase2_end)-1]['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
+                    phase2_end_position=j
+                    break
+                if player_landig_timestamp<=datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
+                    path_bool=True
+                if path_bool:
+                    path_list.append(j['x']*0.01)
+                    path_list.append(j['y']*0.01)
+            draw.line(path_list,fill=color_map[str(num)],width=10)
+
+            # Draw phase1 end position
+            x=phase1_end_position['x']*0.01
+            y=phase1_end_position['y']*0.01
+            draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
+
+            # Draw phase2 end position
+            x=phase2_end_position['x']*0.01
+            y=phase2_end_position['y']*0.01
+            draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
+
+            # Draw landing point and player name
+            x=player_landing_point[0]['x']*0.01
+            y=player_landing_point[0]['y']*0.01
+            draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
+            font = ImageFont.truetype("./font/Myriad Pro Bold SemiExtended.ttf", 40)
+            draw.text((x+40,y-40), i['name'], fill="black",font=font)
+    return map_img_list
 
 def draw_circle_position(map_img, game_state_list):
     circle_phase1=list(filter(lambda x: x['isGame']==1, game_state_list))
@@ -134,11 +156,11 @@ def draw_circle_position(map_img, game_state_list):
         circle_phase1[0]['poisonGasWarningPosition_y']*0.01-circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase1[0]['poisonGasWarningPosition_x']*0.01+circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase1[0]['poisonGasWarningPosition_y']*0.01+circle_phase1[0]['poisonGasWarningPosition_radius']*0.01
-        ), start=0, end=360, fill="White",width=20)
+        ), start=0, end=360, fill="White",width=10)
     draw.arc((
         circle_phase2[0]['poisonGasWarningPosition_x']*0.01-circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase2[0]['poisonGasWarningPosition_y']*0.01-circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase2[0]['poisonGasWarningPosition_x']*0.01+circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase2[0]['poisonGasWarningPosition_y']*0.01+circle_phase2[0]['poisonGasWarningPosition_radius']*0.01
-        ), start=0, end=360, fill="White",width=20)
+        ), start=0, end=360, fill="White",width=10)
     return map_img
