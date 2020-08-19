@@ -113,35 +113,44 @@ def draw_routing_path(map_img, routing_path_list, landing_point_list, team_roste
         path_list.append(player_landing_point[0]['x']*0.01)
         path_list.append(player_landing_point[0]['y']*0.01)
         for j in player_routing_path_list:
+            if player_landig_timestamp<=datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
+                path_bool=True
+            if path_bool:
+                path_list.append(j['x']*0.01)
+                path_list.append(j['y']*0.01)
             if circle_phase1_bool and datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')>=datetime.strptime(circle_phase1_end[len(circle_phase1_end)-1]['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
                 phase1_end_position=j
                 circle_phase1_bool=False
             if datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ')>=datetime.strptime(circle_phase2_end[len(circle_phase2_end)-1]['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
                 phase2_end_position=j
                 break
-            if player_landig_timestamp<=datetime.strptime(j['timestamp'], '%Y-%m-%dT%H:%M:%S.%fZ'):
-                path_bool=True
-            if path_bool:
-                path_list.append(j['x']*0.01)
-                path_list.append(j['y']*0.01)
         draw.line(path_list,fill=color_map[str(num)],width=10)
 
         # Draw phase1 end position
-        x=phase1_end_position['x']*0.01
-        y=phase1_end_position['y']*0.01
-        draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
+        try:
+            x=phase1_end_position['x']*0.01
+            y=phase1_end_position['y']*0.01
+            draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="whitesmoke")
+        except UnboundLocalError:
+            pass
 
         # Draw phase2 end position
-        x=phase2_end_position['x']*0.01
-        y=phase2_end_position['y']*0.01
-        draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
+        try:
+            x=phase2_end_position['x']*0.01
+            y=phase2_end_position['y']*0.01
+            draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="lightgray")
+        except UnboundLocalError:
+            pass
 
         # Draw landing point and player name
-        x=player_landing_point[0]['x']*0.01
-        y=player_landing_point[0]['y']*0.01
-        draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
-        font = ImageFont.truetype("./font/Myriad Pro Bold SemiExtended.ttf", 40)
-        draw.text((x+40,y-40), i['name'], fill="black",font=font)
+        try:
+            x=player_landing_point[0]['x']*0.01
+            y=player_landing_point[0]['y']*0.01
+            draw.ellipse((x-20,y-20,x+20,y+20), outline=(0, 0, 0), fill="Black")
+            font = ImageFont.truetype("./font/Myriad Pro Bold SemiExtended.ttf", 40)
+            draw.text((x+40,y-40), i['name'], fill="black",font=font)
+        except UnboundLocalError:
+            pass
     return map_img
 
 def draw_circle_position(map_img, game_state_list):
@@ -153,11 +162,11 @@ def draw_circle_position(map_img, game_state_list):
         circle_phase1[0]['poisonGasWarningPosition_y']*0.01-circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase1[0]['poisonGasWarningPosition_x']*0.01+circle_phase1[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase1[0]['poisonGasWarningPosition_y']*0.01+circle_phase1[0]['poisonGasWarningPosition_radius']*0.01
-        ), start=0, end=360, fill="White",width=10)
+        ), start=0, end=360, fill="whitesmoke",width=10)
     draw.arc((
         circle_phase2[0]['poisonGasWarningPosition_x']*0.01-circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase2[0]['poisonGasWarningPosition_y']*0.01-circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase2[0]['poisonGasWarningPosition_x']*0.01+circle_phase2[0]['poisonGasWarningPosition_radius']*0.01,
         circle_phase2[0]['poisonGasWarningPosition_y']*0.01+circle_phase2[0]['poisonGasWarningPosition_radius']*0.01
-        ), start=0, end=360, fill="White",width=10)
+        ), start=0, end=360, fill="lightgray",width=10)
     return map_img

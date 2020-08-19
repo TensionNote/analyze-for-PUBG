@@ -7,7 +7,7 @@ from datetime import datetime,timedelta
 from pubg_python import PUBG, Shard
 
 # function
-def makeRoutingPath(match_id,region):
+def makeRoutingPath(match_id,region,team_id):
     ## get data from Server
     # region is "AS" or "TOURNAMENT"
     [match,telemetry]=func4start.get_data_from_server(api_key.api_key(),match_id,region)
@@ -21,6 +21,9 @@ def makeRoutingPath(match_id,region):
     map_img_list=[]
 
     for team_roster_list in roster_list:
+        if(team_roster_list[0]['team_id'] != team_id):
+            continue
+
         # get map name
         map_img = func4map.load_map(match.map_name)
 
@@ -48,10 +51,3 @@ def save_files(match):
 
 def save_img(map_img, match_time_str, match_map_name, team_roster_list):
     map_img.save("./output_files/RoutingPath_"+match_time_str+"_"+match_map_name+str(team_roster_list[0]['team_id']).zfill(2)+".png")
-
-
-match_id="9bf45f55-3f30-4e36-96a5-d1f850e89955"
-region="tournament"
-[map_img_list, match_time_str, match, roster_list]=makeRoutingPath(match_id,region)
-for num,team_roster_list in enumerate(roster_list):
-    save_img(map_img_list[num], match_time_str, match.map_name, team_roster_list)
