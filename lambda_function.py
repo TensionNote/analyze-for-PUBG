@@ -7,6 +7,7 @@ import modules.func4start as func4start
 from pubg_python import PUBG, Shard
 from PIL import Image,ImageDraw,ImageFont
 import makeLandingPoint
+import makeRoutingPath
 import boto3
 
 s3_client = boto3.client('s3')
@@ -15,14 +16,22 @@ def lambda_handler(event, context):
     match_id=event['match']
     region=event['region']
 
-    [map_img, match_time_str, match]=makeLandingPoint.makeLandigPoint(match_id,region)
+    if('teamid' in event):
+        team_id=int(event['teamid'])
+        [map_img, match_time_str, match, roster_list]=makeRoutingPath.makeRoutingPath(match_id,region,team_id)
+        newfilepath="/tmp/RoutingPath_"+match_time_str+"_"+match.map_name+str(roster_list[team_id][0]['team_id']).zfill(2)+".png"
+        map_img.save(newfilepath)
+        bucket = "make-landing-point"
+        key = "output_files/RoutingPath_"+match_time_str+"_"+match.map_name+str(roster_list[team_id][0]['team_id']).zfill(2)+".png"
+        s3_client.upload_file(newfilepath, bucket, key)
 
-    newfilepath="/tmp/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
-    map_img.save(newfilepath)
-
-    bucket = "make-landing-point"
-    key = "output_files/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
-    s3_client.upload_file(newfilepath, bucket, key)
+    else:
+        [map_img, match_time_str, match]=makeLandingPoint.makeLandigPoint(match_id,region)
+        newfilepath="/tmp/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
+        map_img.save(newfilepath)
+        bucket = "make-landing-point"
+        key = "output_files/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
+        s3_client.upload_file(newfilepath, bucket, key)
 
     # return download link
     s3_client.get_object(Bucket=bucket, Key=key)
