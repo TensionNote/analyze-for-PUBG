@@ -33,7 +33,16 @@ def draw_landing_point(map_img, landing_point_list):
         "13":"teal",
         "14":"silver",
         "15":"black",
-        "16":"orangered"
+        "16":"azure",
+        "17":"cadetblue",
+        "18":"beige",
+        "19":"lightsalmon",
+        "20":"mediumslateblue",
+        "21":"ivory",
+        "22":"darkturquoise",
+        "23":"palegoldenrod",
+        "24":"lightcoral",
+        "25":"mediumpurple"
     }
     draw = ImageDraw.Draw(map_img)
     for landing_point in landing_point_list:
