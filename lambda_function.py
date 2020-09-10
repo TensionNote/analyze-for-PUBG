@@ -22,7 +22,7 @@ def lambda_handler(event, context):
         newfilepath="/tmp/RoutingPath_"+match_time_str+"_"+match.map_name+str(roster_list[team_id][0]['team_id']).zfill(2)+".png"
         map_img.save(newfilepath)
         bucket = "make-landing-point"
-        key = "output_files/RoutingPath_"+match_time_str+"_"+match.map_name+str(roster_list[team_id][0]['team_id']).zfill(2)+".png"
+        key = "output_files/RoutingPath_"+match_time_str+"_"+match.map_name+"_"+region+"_"+match_id+"_"+str(roster_list[team_id][0]['team_id']).zfill(2)+".png"
         s3_client.upload_file(newfilepath, bucket, key)
 
     else:
@@ -30,7 +30,7 @@ def lambda_handler(event, context):
         newfilepath="/tmp/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
         map_img.save(newfilepath)
         bucket = "make-landing-point"
-        key = "output_files/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
+        key = "output_files/LandingPoint_"+match_time_str+"_"+match.map_name+"_"+region+"_"+match_id+".png"
         s3_client.upload_file(newfilepath, bucket, key)
 
     # return download link
