@@ -84,7 +84,7 @@ def extract_routing_path(telemetry):
     return routing_path_list
 
 def extract_roster(match):
-    roster_list= [[] for i in range(len(match.rosters))]
+    roster_list= [[] for i in range(len(match.rosters)+1)]
     for i in match.rosters:
         for j in i.participants:
             roster_list[i.attributes['stats']['teamId']-1].append(

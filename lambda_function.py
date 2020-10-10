@@ -8,15 +8,32 @@ from pubg_python import PUBG, Shard
 from PIL import Image,ImageDraw,ImageFont
 import makeLandingPoint
 import makeRoutingPath
+import makeScrimResult
 import boto3
+import requests, json
 
 s3_client = boto3.client('s3')
 
 def lambda_handler(event, context):
-    match_id=event['match']
-    region=event['region']
 
-    if('teamid' in event):
+    if('date' in event):
+        [year,month,day]=event['date'].split('-')
+        scrim_result_list = makeScrimResult.makeScrimResult(year,month,day)
+        # webhook_url  = 'さっき取得したWebhook URL'
+        # main_content = {'content': scrim_result_list}
+        # headers      = {'Content-Type': 'application/json'}
+        # response     = requests.post(webhook_url, json.dumps(main_content), headers=headers)
+        newfilepath="/tmp/scrimResult_zoo_"+event['year']+event['month']+event['day']+".txt"
+        bucket = "make-landing-point"
+        r=json.dumps(scrim_result_list,indent=3)
+        with open(newfilepath, mode='w') as f:
+            f.write(r)
+        key = "output_files/scrimResult_zoo_"+event['year']+event['month']+event['day']+".txt"
+        s3_client.upload_file(newfilepath, bucket, key)
+
+    elif('teamid' in event):
+        match_id=event['match']
+        region=event['region']
         team_id=int(event['teamid'])
         [map_img, match_time_str, match, roster_list]=makeRoutingPath.makeRoutingPath(match_id,region,team_id)
         newfilepath="/tmp/RoutingPath_"+match_time_str+"_"+match.map_name+str(roster_list[team_id][0]['team_id']).zfill(2)+".png"
@@ -26,6 +43,8 @@ def lambda_handler(event, context):
         s3_client.upload_file(newfilepath, bucket, key)
 
     else:
+        match_id=event['match']
+        region=event['region']
         [map_img, match_time_str, match]=makeLandingPoint.makeLandigPoint(match_id,region)
         newfilepath="/tmp/LandingPoint_"+match_time_str+"_"+match.map_name+".png"
         map_img.save(newfilepath)
@@ -45,6 +64,6 @@ def lambda_handler(event, context):
         HttpMethod = 'GET'
     )
     return {
-    'statusCode': 200,
-    'body': url
+        'statusCode': 200,
+        'body': url
     }

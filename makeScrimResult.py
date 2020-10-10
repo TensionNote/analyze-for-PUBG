@@ -7,30 +7,53 @@ from datetime import datetime,timedelta
 from pubg_python import PUBG, Shard
 import csv,pprint
 
-# serch date
-[year, month, day]=[2020, 10, 7]
-
-api = PUBG(api_key.api_key(), Shard.PC_TOURNAMENT)
-
-# get list
-tournaments = api.tournaments()
-match_list=[]
-
-name="test-pjssc"
-for i,match in enumerate((api.tournaments().get(name)).matches):
-    match_time = datetime.strptime(match.attributes['createdAt'], '%Y-%m-%dT%H:%M:%SZ')
-    if([match_time.year, match_time.month, match_time.day] == [year, month ,day]):
-        match_list.append(func4start.get_matchData_from_server(api_key.api_key(),match.id,"tournament"))
-        pprint.pprint(match_list)
-
-# get match timematch_time = datetime.strptime(match.attributes['createdAt'], '%Y-%m-%dT%H:%M:%SZ')
-# match_time = match_time+timedelta(hours=9)
-# match_time_str=match_time.strftime('%Y%m%d_%H%M%S')
-
-
-
-# チームメンバー抽出
-match.rosters[0].participants[0].name
-match.rosters[0].participants[0].kills
-# チームランク抽出
-match.rosters[0].stats['rank']
+def makeScrimResult(year,month,day):
+    api = PUBG(api_key.api_key(), Shard.PC_TOURNAMENT)
+    scrim_result_list=[]
+    rank_pts_list={
+        "1":10,
+        "2":6,
+        "3":5,
+        "4":4,
+        "5":3,
+        "6":2,
+        "7":1,
+        "8":1,
+        "9":0,
+        "10":0,
+        "11":0,
+        "12":0,
+        "14":0,
+        "15":0,
+        "16":0,
+        "17":0,
+        "18":0,
+        "19":0,
+        "20":0,
+        "21":0,
+        "22":0,
+        "23":0,
+        "24":0,
+        "25":0
+    }
+    map_name_list={
+        "Desert_Main":"Miramar",
+        "Baltic_Main":"Erangel"
+    }
+    name="test-pjssc"
+    for match in (api.tournaments().get(name)).matches:
+        match_time = datetime.strptime(match.attributes['createdAt'], '%Y-%m-%dT%H:%M:%SZ')
+        if([match_time.year, match_time.month, match_time.day] == [year, month ,day]):
+            matchDetail=func4start.get_matchData_from_server(api_key.api_key(),match.id,"tournament")
+            for rosters in matchDetail.rosters:
+                for participants in rosters.participants:
+                    if( "zoo" in participants.name.lower()):
+                        pts=sum(item.kills for item in rosters.participants)+rank_pts_list[str(rosters.stats['rank'])]
+                        scrim_result_list.append(
+                            {
+                                'map_name': map_name_list[str(matchDetail.map_name)],
+                                'rank': rosters.stats['rank'],
+                                'pts': pts
+                            })
+                        break
+    return scrim_result_list
