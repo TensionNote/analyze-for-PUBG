@@ -5,9 +5,10 @@ import modules.func4savefiles as func4savefiles
 import modules.func4start as func4start
 from datetime import datetime,timedelta
 from pubg_python import PUBG, Shard
-import csv,pprint
+import csv,pprint,json,requests
 
-def makeScrimResult(year,month,day):
+def makeScrimResult(date):
+    [year,month,day]=(int(s) for s in date.split('-'))
     api = PUBG(api_key.api_key(), Shard.PC_TOURNAMENT)
     scrim_result_list=[]
     rank_pts_list={
@@ -49,11 +50,46 @@ def makeScrimResult(year,month,day):
                 for participants in rosters.participants:
                     if( "zoo" in participants.name.lower()):
                         pts=sum(item.kills for item in rosters.participants)+rank_pts_list[str(rosters.stats['rank'])]
+                        high_pts="　"
+                        if pts>9:
+                            high_pts="★"
                         scrim_result_list.append(
                             {
                                 'map_name': map_name_list[str(matchDetail.map_name)],
                                 'rank': rosters.stats['rank'],
-                                'pts': pts
+                                'pts': pts,
+                                'id':matchDetail.id,
+                                'high_pts':high_pts
                             })
                         break
+
+    # send scrim result to Dscord
+    result_list=[]
+    result_list.append("**"+date+"**")
+    for i in reversed(scrim_result_list):
+        result_list.append('{high_pts} {map_name} {rank}位 {pts}pt'.format(
+                high_pts=i['high_pts'],
+                map_name=i['map_name'],
+                rank=str(i['rank']),
+                pts=str(i['pts']),
+                )
+        )
+    resultStr="\r".join(result_list)
+    webhook_url = api_key.discord4scrim_result()
+    main_content = {'content': resultStr}
+    headers = {'Content-Type': 'application/json'}
+    requests.post(webhook_url, json.dumps(main_content), headers=headers)
+
+    # send match id to Discord
+    result_list=[]
+    result_list.append("**"+date+"**")
+    for i in reversed(scrim_result_list):
+        result_list.append('{id}'.format(id=str(i['id']))
+    )
+    resultStr="\r".join(result_list)
+    webhook_url  = api_key.discord4match_id()
+    main_content = {'content': resultStr}
+    headers = {'Content-Type': 'application/json'}
+    requests.post(webhook_url, json.dumps(main_content), headers=headers)
+
     return scrim_result_list

@@ -17,19 +17,18 @@ s3_client = boto3.client('s3')
 def lambda_handler(event, context):
 
     if('date' in event):
+        scrim_result_list = makeScrimResult.makeScrimResult(event['date'])
         [year,month,day]=event['date'].split('-')
-        scrim_result_list = makeScrimResult.makeScrimResult(year,month,day)
-        # webhook_url  = 'さっき取得したWebhook URL'
-        # main_content = {'content': scrim_result_list}
-        # headers      = {'Content-Type': 'application/json'}
-        # response     = requests.post(webhook_url, json.dumps(main_content), headers=headers)
-        newfilepath="/tmp/scrimResult_zoo_"+event['year']+event['month']+event['day']+".txt"
+        newfilepath="/tmp/scrimResult_zoo_"+year+month+day+".txt"
         bucket = "make-landing-point"
         r=json.dumps(scrim_result_list,indent=3)
         with open(newfilepath, mode='w') as f:
             f.write(r)
-        key = "output_files/scrimResult_zoo_"+event['year']+event['month']+event['day']+".txt"
+        key = "output_files/scrimResult_zoo_"+year+month+day+".json"
         s3_client.upload_file(newfilepath, bucket, key)
+        return {
+            'statusCode': 200,
+        }
 
     elif('teamid' in event):
         match_id=event['match']
