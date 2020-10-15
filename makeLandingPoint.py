@@ -31,5 +31,5 @@ def makeLandigPoint(match_id,region):
 def save_files(match):
     func4savefiles.save_files(match)
 
-def save_img(map_img, match_time_str, match_map_name):
-    map_img.save("./output_files/LandingPoint_"+match_time_str+"_"+match_map_name+".png")
+def save_img(map_img, match_time_str, match_map_name, region, match_id):
+    map_img.save("./output_files/LandingPoint_"+match_time_str+"_"+match_map_name+"_"+region+"_"+match_id+".png")
