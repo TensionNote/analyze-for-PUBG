@@ -9,6 +9,7 @@ for match_id in match_id_list:
     # [map_img, match_time_str, match]=mlp.makeLandigPoint(match_id,"as")
 
     # tournament server
-    [map_img, match_time_str, match]=mlp.makeLandigPoint(match_id,"as")
+    region="tournament"
+    [map_img, match_time_str, match]=mlp.makeLandigPoint(match_id, region)
 
-    mlp.save_img(map_img, match_time_str, match.map_name)
+    mlp.save_img(map_img, match_time_str, match.map_name, region, match_id)
