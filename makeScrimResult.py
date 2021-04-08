@@ -153,7 +153,7 @@ def makeScrimResult_public(match_list):
 
     # send scrim result to Dscord
     result_list=[]
-    result_list.append("**"+str(match_time.year)+str(match_time.month)+str(match_time.day)+"**")
+    result_list.append("**"+str(match_time.year)+"-"+str(match_time.month)+"-"+str(match_time.day)+"**")
     for i in reversed(scrim_result_list):
         result_list.append('{high_pts} {map_name} {rank}位 {pts}pt'.format(
                 high_pts=i['high_pts'],
@@ -170,7 +170,7 @@ def makeScrimResult_public(match_list):
 
     # send match id to Discord
     result_list=[]
-    result_list.append("**"+str(match_time.year)+str(match_time.month)+str(match_time.day)+"**")
+    result_list.append("**"+str(match_time.year)+"-"+str(match_time.month)+"-"+str(match_time.day)+"(public)"+"**")
     for i in reversed(scrim_result_list):
         result_list.append('{id}'.format(id=str(i['id']))
     )
