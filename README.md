@@ -24,10 +24,15 @@
 - PUBG API
 - Discord API
 
+# AWS構成図
+ <img width="960" alt="720" src="LPS_System_Diagram.png">
+
 # システム画面
  <img width="960" alt="720" src="LPS_Screen.png">
 
-# AWS構成図
- <img width="960" alt="720" src="LPS_System_Diagram.png">
+# 生成画像
+ <img width="960" alt="720" src="LPS_generating_picture.png">
+
+
 
 
