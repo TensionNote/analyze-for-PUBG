@@ -15,14 +15,6 @@
  PUBG APIサーバからデータを自動で取得し、各チームの降下地点図を自動生成します<br>
  これによって作業負荷の軽減・資料品質の向上を達成を目指しました
 
-# システム画面
- <img width="960" alt="720" src="LPS_Screen.png">
-
-# URL
-https://make-landing-point.s3-ap-northeast-1.amazonaws.com/index.html<br>
-※ 動作確認用として「Sample ID」を押下することで、フォーム内に自動でマッチIDが入力されるようになっています
-※ 動作確認をする場合、プルダウンメニューは「Tournament」を指定して下さい
-
 # 使用技術
 - Python 3.8.3
 - AWS
@@ -31,6 +23,9 @@ https://make-landing-point.s3-ap-northeast-1.amazonaws.com/index.html<br>
   - API Gateway
 - PUBG API
 - Discord API
+
+# システム画面
+ <img width="960" alt="720" src="LPS_Screen.png">
 
 # AWS構成図
  <img width="960" alt="720" src="LPS_System_Diagram.png">
